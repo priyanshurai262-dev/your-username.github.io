@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BlackR | Mobile Accessories</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --red: #E8000D;
+    --red-dark: #B0000A;
+    --red-light: #FF2030;
+    --white: #FFFFFF;
+    --off-white: #F7F7F7;
+    --black: #0A0A0A;
+    --gray: #1A1A1A;
+    --light-gray: #EBEBEB;
+    --text-muted: #888;
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--white);
+    color: var(--black);
+    overflow-x: hidden;
+  }
+
+  /* ─── CURSOR ─── */
+  body { cursor: none; }
+  #cursor {
+    width: 14px; height: 14px;
+    background: var(--red);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s;
+    mix-blend-mode: multiply;
+  }
+  #cursor.big { width: 40px; height: 40px; }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--off-white); }
+  ::-webkit-scrollbar-thumb { background: var(--red); }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top:0; left:0; right:0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4%;
+    height: 70px;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 2px solid var(--light-gray);
+    transition: box-shadow 0.3s;
+  }
+  nav.scrolled { box-shadow: 0 4px 30px rgba(232,0,13,0.1); }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 3px;
+    color: var(--black);
+    text-decoration: none;
+  }
+  .logo span { color: var(--red); }
+
+  .nav-links {
+    display: flex; gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--black);
+    text-decoration: none;
+    position: relative;
+  }
+  .nav-links a::after {
+    content:''; position:absolute; bottom:-4px; left:0;
+    width:0; height:2px;
+    background: var(--red);
+    transition: width 0.3s;
+  }
+  .nav-links a:hover::after { width:100%; }
+
+  .nav-cta {
+    background: var(--red);
+    color: var(--white) !important;
+    padding: 0.6rem 1.5rem;
+    border-radius: 2px;
+    letter-spacing: 2px;
+    font-size: 0.8rem !important;
+    font-weight: 700 !important;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--red-dark) !important; }
+  .nav-cta::after { display: none !important; }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    background: var(--black);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 0 4%;
+  }
+
+  .hero-bg-text {
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(120px, 20vw, 280px);
+    color: rgba(232,0,13,0.05);
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    white-space: nowrap;
+    pointer-events: none;
+    letter-spacing: 10px;
+    animation: bgPulse 4s ease-in-out infinite;
+  }
+  @keyframes bgPulse {
+    0%,100% { opacity:0.05; }
+    50% { opacity: 0.09; }
+  }
+
+  .hero-stripe {
+    position: absolute;
+    top:0; bottom:0;
+    right: 0;
+    width: 42%;
+    background: var(--red);
+    clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+    opacity: 0;
+    animation: stripeIn 0.9s cubic-bezier(0.4,0,0.2,1) 0.2s forwards;
+  }
+  @keyframes stripeIn {
+    from { clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%); opacity:0; }
+    to   { clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%); opacity:1; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 55%;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: fadeUp 0.8s ease 0.5s forwards;
+  }
+  @keyframes fadeUp {
+    to { opacity:1; transform:translateY(0); }
+  }
+
+  .hero-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 40px; height: 2px;
+    background: var(--red);
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 8vw, 110px);
+    line-height: 0.95;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+    letter-spacing: 2px;
+  }
+  .hero-title em {
+    font-style: normal;
+    color: var(--red);
+    -webkit-text-stroke: 0px;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.7;
+    max-width: 440px;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: var(--red);
+    color: var(--white);
+    padding: 1rem 2.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border: none;
+    cursor: none;
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.2s;
+  }
+  .btn-primary::before {
+    content:'';
+    position:absolute; inset:0;
+    background: rgba(255,255,255,0.15);
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+  .btn-primary:hover::before { transform: translateX(0); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--white);
+    padding: 1rem 2.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border: 2px solid rgba(255,255,255,0.3);
+    cursor: none;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--white); }
+
+  .hero-right-content {
+    position: absolute;
+    right: 0; top:0; bottom:0;
+    width: 42%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+  }
+
+  .hero-product-showcase {
+    text-align: center;
+    color: var(--white);
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+
+  .hero-product-icon {
+    font-size: 120px;
+    line-height: 1;
+    filter: drop-shadow(0 20px 60px rgba(0,0,0,0.4));
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-18px); }
+  }
+
+  .hero-product-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 5px;
+    margin-top: 1rem;
+    opacity: 0.8;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255,255,255,0.4);
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    z-index: 5;
+    animation: fadeUp 1s ease 1.2s both;
+  }
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.4));
+    animation: scrollDown 1.5s ease-in-out infinite;
+  }
+  @keyframes scrollDown {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* ─── STATS STRIP ─── */
+  .stats-strip {
+    background: var(--red);
+    padding: 1.5rem 4%;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .stat {
+    text-align: center;
+    color: var(--white);
+  }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+    display: block;
+  }
+  .stat-label {
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  /* ─── SECTION COMMON ─── */
+  section { padding: 100px 4%; }
+
+  .section-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .section-tag::before {
+    content: '';
+    display: block;
+    width: 30px; height: 2px;
+    background: var(--red);
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 5vw, 60px);
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  /* ─── CATEGORIES ─── */
+  #categories { background: var(--off-white); }
+
+  .categories-header { margin-bottom: 3rem; }
+
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .cat-card {
+    background: var(--white);
+    border: 2px solid transparent;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    cursor: none;
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .cat-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 3px;
+    background: var(--red);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+  .cat-card:hover::before { transform: scaleX(1); }
+  .cat-card:hover {
+    border-color: var(--red);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(232,0,13,0.12);
+  }
+
+  .cat-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+    transition: transform 0.3s;
+  }
+  .cat-card:hover .cat-icon { transform: scale(1.15); }
+
+  .cat-img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    transition: transform 0.3s;
+  }
+  .cat-card:hover .cat-img { transform: scale(1.15); }
+
+  .cat-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .cat-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ─── FEATURED PRODUCTS ─── */
+  #products { background: var(--white); }
+
+  .products-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .view-all {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: gap 0.2s;
+  }
+  .view-all:hover { gap: 0.9rem; }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
+  }
+
+  .product-card {
+    position: relative;
+    cursor: none;
+    group: true;
+  }
+
+  .product-img-wrap {
+    background: var(--off-white);
+    height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    overflow: hidden;
+    position: relative;
+    transition: background 0.3s;
+    margin-bottom: 1.2rem;
+  }
+  .product-card:hover .product-img-wrap { background: var(--light-gray); }
+
+  .product-badge {
+    position: absolute;
+    top: 1rem; left: 1rem;
+    background: var(--red);
+    color: var(--white);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+  }
+
+  .product-emoji {
+    font-size: 80px;
+    transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+  .product-card:hover .product-emoji { transform: scale(1.1) rotate(-5deg); }
+
+  .product-actions {
+    position: absolute;
+    bottom: 1rem; right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .product-card:hover .product-actions { opacity:1; transform:translateX(0); }
+
+  .action-btn {
+    width: 40px; height: 40px;
+    background: var(--white);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: background 0.2s;
+  }
+  .action-btn:hover { background: var(--red); filter: brightness(10); }
+
+  .product-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+  .product-sub {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 0.7rem;
+  }
+  .product-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .product-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    color: var(--red);
+    letter-spacing: 1px;
+  }
+  .product-old-price {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-decoration: line-through;
+    margin-left: 0.5rem;
+  }
+  .add-cart {
+    background: var(--black);
+    color: var(--white);
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: none;
+    transition: background 0.2s;
+  }
+  .add-cart:hover { background: var(--red); }
+
+  /* ─── MARQUEE ─── */
+  .marquee-section {
+    background: var(--black);
+    padding: 1.5rem 0;
+    overflow: hidden;
+    border-top: 2px solid var(--red);
+    border-bottom: 2px solid var(--red);
+  }
+  .marquee-track {
+    display: flex;
+    white-space: nowrap;
+    animation: marquee 20s linear infinite;
+  }
+  .marquee-track span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 4px;
+    color: var(--white);
+    padding: 0 2rem;
+  }
+  .marquee-track span.dot {
+    color: var(--red);
+    padding: 0;
+    font-size: 1.5rem;
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ─── ABOUT ─── */
+  #about {
+    background: var(--black);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    padding: 0;
+  }
+
+  .about-visual {
+    background: var(--red);
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 180px;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-visual::before {
+    content: 'BLACKR';
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 7rem;
+    color: rgba(0,0,0,0.15);
+    letter-spacing: 10px;
+    writing-mode: vertical-rl;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+  }
+
+  .about-content {
+    padding: 80px 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .about-content .section-tag { margin-bottom: 1rem; }
+  .about-content .section-title { color: var(--white); margin-bottom: 1.5rem; }
+  .about-content p {
+    color: rgba(255,255,255,0.6);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+  }
+
+  .about-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .about-feat {
+    border-left: 2px solid var(--red);
+    padding-left: 1rem;
+  }
+  .about-feat strong {
+    display: block;
+    color: var(--white);
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    margin-bottom: 0.2rem;
+  }
+  .about-feat span {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.4);
+  }
+
+  /* ─── CONTACT ─── */
+  #contact { background: var(--off-white); }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .contact-info h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+  }
+  .contact-info p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--white);
+    margin-bottom: 1rem;
+    border-left: 3px solid var(--red);
+  }
+  .contact-item-icon { font-size: 1.5rem; }
+  .contact-item-text strong {
+    display: block;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+  }
+  .contact-item-text span {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .whatsapp-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: #25D366;
+    color: var(--white);
+    padding: 1rem 2rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    margin-top: 1.5rem;
+    transition: opacity 0.2s;
+  }
+  .whatsapp-btn:hover { opacity: 0.9; }
+
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-group label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--black);
+  }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    border: 2px solid var(--light-gray);
+    padding: 0.9rem 1rem;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    background: var(--white);
+    transition: border-color 0.2s;
+    outline: none;
+    resize: none;
+    cursor: none;
+    appearance: none;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus { border-color: var(--red); }
+
+  .form-submit {
+    background: var(--red);
+    color: var(--white);
+    border: none;
+    padding: 1rem 2rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: none;
+    transition: background 0.2s;
+    align-self: flex-start;
+  }
+  .form-submit:hover { background: var(--red-dark); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--black);
+    color: var(--white);
+    padding: 60px 4% 30px;
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+  .footer-brand .logo { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+  .footer-brand p {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.8;
+    max-width: 280px;
+  }
+
+  .footer-col h4 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 1.2rem;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 0.7rem; }
+  .footer-col ul li a {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-col ul li a:hover { color: var(--white); }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.3);
+  }
+  .footer-bottom a { color: var(--red); text-decoration: none; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    #about { grid-template-columns: 1fr; }
+    .about-visual { min-height: 300px; }
+    .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .hero-content { max-width: 100%; }
+    .hero-right-content { display: none; }
+    .hero-stripe { display: none; }
+  }
+  @media (max-width: 600px) {
+    .footer-top { grid-template-columns: 1fr; }
+    .about-features { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div id="cursor"></div>
+
+<!-- ─── NAV ─── -->
+<nav id="nav">
+  <a href="#hero" class="logo">BLACK<span>R</span></a>
+  <ul class="nav-links">
+    <li><a href="#categories">Categories</a></li>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section id="hero">
+  <div class="hero-bg-text">BLACKR</div>
+  <div class="hero-stripe"></div>
+
+  <div class="hero-content">
+    <div class="hero-tag">Mobile Accessories</div>
+    <h1 class="hero-title">
+      POWER<br/>YOUR<br/><em>DEVICE</em>
+    </h1>
+    <p class="hero-sub">
+      Premium cables, adapters, AirPods, and neckbands — built for performance, designed for life.
+    </p>
+    <div class="hero-btns">
+      <a href="#products" class="btn-primary">Shop Now</a>
+      <a href="#categories" class="btn-outline">Explore</a>
+    </div>
+  </div>
+
+  <div class="hero-right-content">
+    <div class="hero-product-showcase">
+      <div class="hero-product-icon" id="heroIcon">🎧</div>
+      <div class="hero-product-label">Premium Sound</div>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- ─── STATS ─── -->
+<div class="stats-strip">
+  <div class="stat">
+    <span class="stat-num">500+</span>
+    <span class="stat-label">Products</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num">10K+</span>
+    <span class="stat-label">Happy Customers</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num">5★</span>
+    <span class="stat-label">Avg Rating</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num">24H</span>
+    <span class="stat-label">Fast Delivery</span>
+  </div>
+</div>
+
+<!-- ─── CATEGORIES ─── -->
+<section id="categories">
+  <div class="categories-header">
+    <div class="section-tag">Browse</div>
+    <h2 class="section-title">SHOP BY CATEGORY</h2>
+  </div>
+  <div class="categories-grid">
+    <div class="cat-card">
+      <!-- Type-C to C Adapter SVG -->
+      <svg class="cat-img" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Left USB-C plug head -->
+        <rect x="5" y="48" width="28" height="24" rx="6" fill="#555" stroke="#333" stroke-width="1.5"/>
+        <rect x="9" y="52" width="20" height="16" rx="3" fill="#333"/>
+        <!-- Right USB-C plug head -->
+        <rect x="87" y="48" width="28" height="24" rx="6" fill="#555" stroke="#333" stroke-width="1.5"/>
+        <rect x="91" y="52" width="20" height="16" rx="3" fill="#333"/>
+        <!-- Middle adapter body -->
+        <rect x="33" y="44" width="54" height="32" rx="10" fill="#888" stroke="#666" stroke-width="1.5"/>
+        <rect x="38" y="50" width="44" height="20" rx="6" fill="#aaa"/>
+        <!-- Silver center dot -->
+        <circle cx="60" cy="60" r="6" fill="#ccc" stroke="#999" stroke-width="1"/>
+        <circle cx="60" cy="60" r="3" fill="#e0e0e0"/>
+        <!-- Type-C port pins left side -->
+        <line x1="9" y1="58" x2="18" y2="58" stroke="#888" stroke-width="1"/>
+        <line x1="9" y1="62" x2="18" y2="62" stroke="#888" stroke-width="1"/>
+        <!-- Type-C port pins right side -->
+        <line x1="102" y1="58" x2="111" y2="58" stroke="#888" stroke-width="1"/>
+        <line x1="102" y1="62" x2="111" y2="62" stroke="#888" stroke-width="1"/>
+        <!-- Label -->
+        <text x="60" y="107" text-anchor="middle" font-size="9" fill="#E8000D" font-family="Arial" font-weight="bold">TYPE-C to TYPE-C</text>
+      </svg>
+      <div class="cat-name">Adapters</div>
+      <div class="cat-desc">USB-C, Lightning, HDMI & universal adapters for every device.</div>
+    </div>
+    <div class="cat-card">
+      <!-- Red & White Type-C to C Cable SVG -->
+      <svg class="cat-img" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Left connector -->
+        <rect x="4" y="50" width="22" height="20" rx="5" fill="#ccc" stroke="#999" stroke-width="1.2"/>
+        <rect x="7" y="54" width="16" height="12" rx="2.5" fill="#888"/>
+        <!-- Right connector -->
+        <rect x="94" y="50" width="22" height="20" rx="5" fill="#ccc" stroke="#999" stroke-width="1.2"/>
+        <rect x="97" y="54" width="16" height="12" rx="2.5" fill="#888"/>
+        <!-- Cable - red half -->
+        <path d="M26 57 Q48 40 60 60" stroke="#E8000D" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <!-- Cable - white half -->
+        <path d="M60 60 Q72 80 94 63" stroke="#ffffff" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="0"/>
+        <path d="M60 60 Q72 80 94 63" stroke="#cccccc" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <!-- Cable border/shadow -->
+        <path d="M26 57 Q48 40 60 60 Q72 80 94 63" stroke="rgba(0,0,0,0.15)" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M26 57 Q48 40 60 60" stroke="#E8000D" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M60 60 Q72 80 94 63" stroke="#dddddd" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <!-- Label -->
+        <text x="60" y="107" text-anchor="middle" font-size="9" fill="#E8000D" font-family="Arial" font-weight="bold">TYPE-C CABLE</text>
+      </svg>
+      <div class="cat-name">Cables</div>
+      <div class="cat-desc">Fast-charging cables — Type-C, Lightning, Micro-USB & more.</div>
+    </div>
+    <div class="cat-card">
+      <span class="cat-icon">🎧</span>
+      <div class="cat-name">AirPods</div>
+      <div class="cat-desc">Crystal clear audio. Truly wireless. All-day comfort.</div>
+    </div>
+    <div class="cat-card">
+      <!-- Black Neckband SVG -->
+      <svg class="cat-img" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Neckband arc -->
+        <path d="M20 70 Q20 25 60 22 Q100 25 100 70" stroke="#1a1a1a" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <!-- Left earbud -->
+        <ellipse cx="19" cy="74" rx="10" ry="14" fill="#111" stroke="#333" stroke-width="1.5"/>
+        <ellipse cx="19" cy="74" rx="6" ry="9" fill="#222"/>
+        <circle cx="19" cy="74" r="3" fill="#E8000D"/>
+        <!-- Right earbud -->
+        <ellipse cx="101" cy="74" rx="10" ry="14" fill="#111" stroke="#333" stroke-width="1.5"/>
+        <ellipse cx="101" cy="74" rx="6" ry="9" fill="#222"/>
+        <circle cx="101" cy="74" r="3" fill="#E8000D"/>
+        <!-- Left magnet tip -->
+        <rect x="14" y="86" width="10" height="5" rx="2.5" fill="#555"/>
+        <!-- Right magnet tip -->
+        <rect x="96" y="86" width="10" height="5" rx="2.5" fill="#555"/>
+        <!-- Magnetic connection dots -->
+        <circle cx="19" cy="90" r="2" fill="#E8000D" opacity="0.7"/>
+        <circle cx="101" cy="90" r="2" fill="#E8000D" opacity="0.7"/>
+        <!-- Label -->
+        <text x="60" y="112" text-anchor="middle" font-size="9" fill="#E8000D" font-family="Arial" font-weight="bold">NECKBAND</text>
+      </svg>
+      <div class="cat-name">Neckbands</div>
+      <div class="cat-desc">Magnetic neckbands with deep bass & noise isolation.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── MARQUEE ─── -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span>FREE SHIPPING</span><span class="dot">✦</span>
+    <span>PREMIUM QUALITY</span><span class="dot">✦</span>
+    <span>FAST CHARGING</span><span class="dot">✦</span>
+    <span>1 YEAR WARRANTY</span><span class="dot">✦</span>
+    <span>BLACKR STORE</span><span class="dot">✦</span>
+    <span>FREE SHIPPING</span><span class="dot">✦</span>
+    <span>PREMIUM QUALITY</span><span class="dot">✦</span>
+    <span>FAST CHARGING</span><span class="dot">✦</span>
+    <span>1 YEAR WARRANTY</span><span class="dot">✦</span>
+    <span>BLACKR STORE</span><span class="dot">✦</span>
+    <span>FREE SHIPPING</span><span class="dot">✦</span>
+    <span>PREMIUM QUALITY</span><span class="dot">✦</span>
+    <span>FAST CHARGING</span><span class="dot">✦</span>
+    <span>1 YEAR WARRANTY</span><span class="dot">✦</span>
+    <span>BLACKR STORE</span><span class="dot">✦</span>
+  </div>
+</div>
+
+<!-- ─── PRODUCTS ─── -->
+<section id="products">
+  <div class="products-header">
+    <div>
+      <div class="section-tag">Hot Picks</div>
+      <h2 class="section-title">FEATURED PRODUCTS</h2>
+    </div>
+    <a href="#" class="view-all">View All → </a>
+  </div>
+  <div class="products-grid">
+    <!-- Type-A Adapter -->
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="product-badge">New</span>
+        <svg style="width:90px;height:90px;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1)" class="product-emoji" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- USB-A plug (left) - rectangular flat -->
+          <rect x="4" y="46" width="32" height="28" rx="3" fill="#777" stroke="#555" stroke-width="1.5"/>
+          <rect x="7" y="50" width="26" height="20" rx="2" fill="#444"/>
+          <rect x="9" y="52" width="22" height="7" rx="1" fill="#222"/>
+          <rect x="9" y="61" width="22" height="7" rx="1" fill="#222"/>
+          <!-- Middle body -->
+          <rect x="36" y="42" width="48" height="36" rx="10" fill="#999" stroke="#777" stroke-width="1.5"/>
+          <rect x="41" y="48" width="38" height="24" rx="6" fill="#bbb"/>
+          <!-- Center ring -->
+          <circle cx="60" cy="60" r="7" fill="#ddd" stroke="#aaa" stroke-width="1"/>
+          <circle cx="60" cy="60" r="3.5" fill="#eee"/>
+          <!-- USB-C plug (right) - oval shape -->
+          <rect x="84" y="48" width="32" height="24" rx="12" fill="#777" stroke="#555" stroke-width="1.5"/>
+          <rect x="88" y="52" width="24" height="16" rx="8" fill="#444"/>
+          <!-- USB-A side pins -->
+          <line x1="7" y1="55" x2="18" y2="55" stroke="#aaa" stroke-width="1"/>
+          <line x1="7" y1="65" x2="18" y2="65" stroke="#aaa" stroke-width="1"/>
+          <!-- Label -->
+          <text x="60" y="110" text-anchor="middle" font-size="8.5" fill="#E8000D" font-family="Arial" font-weight="bold">TYPE-A ADAPTER</text>
+        </svg>
+        <div class="product-actions">
+          <button class="action-btn">♡</button>
+          <button class="action-btn">👁</button>
+        </div>
+      </div>
+      <div class="product-name">SwiftLink Type-A Adapter</div>
+      <div class="product-sub">USB-A to Type-C · Plug & Play · Compact</div>
+      <div class="product-footer">
+        <div>
+          <span class="product-price">₹499</span>
+          <span class="product-old-price">₹799</span>
+        </div>
+        <button class="add-cart">Add +</button>
+      </div>
+    </div>
+
+    <!-- Type-C to C Adapter -->
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="product-badge">Hot</span>
+        <svg style="width:90px;height:90px;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1)" class="product-emoji" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Left USB-C plug -->
+          <rect x="4" y="48" width="28" height="24" rx="12" fill="#666" stroke="#444" stroke-width="1.5"/>
+          <rect x="8" y="52" width="20" height="16" rx="8" fill="#333"/>
+          <!-- Right USB-C plug -->
+          <rect x="88" y="48" width="28" height="24" rx="12" fill="#666" stroke="#444" stroke-width="1.5"/>
+          <rect x="92" y="52" width="20" height="16" rx="8" fill="#333"/>
+          <!-- Middle body -->
+          <rect x="32" y="43" width="56" height="34" rx="11" fill="#E8000D" stroke="#B0000A" stroke-width="1.5"/>
+          <rect x="37" y="49" width="46" height="22" rx="7" fill="#FF3040"/>
+          <!-- Center logo mark -->
+          <circle cx="60" cy="60" r="7" fill="#fff" opacity="0.2"/>
+          <text x="60" y="64" text-anchor="middle" font-size="8" fill="#fff" font-family="Arial" font-weight="bold">C-C</text>
+          <!-- Pin lines left -->
+          <line x1="8" y1="57" x2="17" y2="57" stroke="#888" stroke-width="1.2"/>
+          <line x1="8" y1="63" x2="17" y2="63" stroke="#888" stroke-width="1.2"/>
+          <!-- Pin lines right -->
+          <line x1="103" y1="57" x2="112" y2="57" stroke="#888" stroke-width="1.2"/>
+          <line x1="103" y1="63" x2="112" y2="63" stroke="#888" stroke-width="1.2"/>
+          <!-- Label -->
+          <text x="60" y="110" text-anchor="middle" font-size="8.5" fill="#E8000D" font-family="Arial" font-weight="bold">TYPE-C TO TYPE-C</text>
+        </svg>
+        <div class="product-actions">
+          <button class="action-btn">♡</button>
+          <button class="action-btn">👁</button>
+        </div>
+      </div>
+      <div class="product-name">ProConnect C-to-C Adapter</div>
+      <div class="product-sub">USB-C to USB-C · 100W PD · OTG Support</div>
+      <div class="product-footer">
+        <div>
+          <span class="product-price">₹599</span>
+          <span class="product-old-price">₹999</span>
+        </div>
+        <button class="add-cart">Add +</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Cables Sub-header -->
+  <div class="products-header" style="margin-top:4rem;">
+    <div>
+      <div class="section-tag">Cables</div>
+      <h2 class="section-title">CHARGING CABLES</h2>
+    </div>
+  </div>
+  <div class="products-grid">
+
+    <!-- Type-A to C Cable -->
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="product-badge">New</span>
+        <svg style="width:90px;height:90px;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1)" class="product-emoji" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- USB-A connector left -->
+          <rect x="4" y="47" width="26" height="26" rx="3" fill="#777" stroke="#555" stroke-width="1.5"/>
+          <rect x="7" y="51" width="20" height="18" rx="2" fill="#444"/>
+          <rect x="9" y="53" width="16" height="6" rx="1" fill="#222"/>
+          <rect x="9" y="61" width="16" height="6" rx="1" fill="#222"/>
+          <!-- USB-C connector right -->
+          <rect x="90" y="49" width="26" height="22" rx="11" fill="#777" stroke="#555" stroke-width="1.5"/>
+          <rect x="94" y="53" width="18" height="14" rx="7" fill="#444"/>
+          <!-- Cable wire - orange/black braid -->
+          <path d="M30 57 Q55 38 65 60 Q75 82 90 63" stroke="rgba(0,0,0,0.18)" stroke-width="9" fill="none" stroke-linecap="round"/>
+          <path d="M30 57 Q55 38 65 60 Q75 82 90 63" stroke="#E8000D" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path d="M30 57 Q55 38 65 60 Q75 82 90 63" stroke="#000" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="7 7" opacity="0.25"/>
+          <!-- Stress relief left -->
+          <rect x="28" y="51" width="6" height="18" rx="3" fill="#555"/>
+          <!-- Stress relief right -->
+          <rect x="86" y="52" width="6" height="16" rx="3" fill="#555"/>
+          <text x="60" y="110" text-anchor="middle" font-size="8.5" fill="#E8000D" font-family="Arial" font-weight="bold">TYPE-A TO TYPE-C</text>
+        </svg>
+        <div class="product-actions">
+          <button class="action-btn">♡</button>
+          <button class="action-btn">👁</button>
+        </div>
+      </div>
+      <div class="product-name">SpeedLine A-to-C Cable</div>
+      <div class="product-sub">USB-A to Type-C · Fast Charge · 1m Braided</div>
+      <div class="product-footer">
+        <div>
+          <span class="product-price">₹299</span>
+          <span class="product-old-price">₹499</span>
+        </div>
+        <button class="add-cart">Add +</button>
+      </div>
+    </div>
+
+    <!-- Type-C to C Cable -->
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="product-badge">Hot</span>
+        <svg style="width:90px;height:90px;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1)" class="product-emoji" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- USB-C connector left -->
+          <rect x="4" y="49" width="26" height="22" rx="11" fill="#777" stroke="#555" stroke-width="1.5"/>
+          <rect x="8" y="53" width="18" height="14" rx="7" fill="#444"/>
+          <!-- USB-C connector right -->
+          <rect x="90" y="49" width="26" height="22" rx="11" fill="#777" stroke="#555" stroke-width="1.5"/>
+          <rect x="94" y="53" width="18" height="14" rx="7" fill="#444"/>
+          <!-- Cable - red half -->
+          <path d="M30 57 Q50 38 60 60 Q70 82 90 63" stroke="rgba(0,0,0,0.18)" stroke-width="9" fill="none" stroke-linecap="round"/>
+          <path d="M30 57 Q50 42 60 60" stroke="#E8000D" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <!-- Cable - white half -->
+          <path d="M60 60 Q70 78 90 63" stroke="#cccccc" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <!-- Stress relief left -->
+          <rect x="28" y="52" width="6" height="16" rx="3" fill="#555"/>
+          <!-- Stress relief right -->
+          <rect x="86" y="52" width="6" height="16" rx="3" fill="#555"/>
+          <text x="60" y="110" text-anchor="middle" font-size="8.5" fill="#E8000D" font-family="Arial" font-weight="bold">TYPE-C TO TYPE-C</text>
+        </svg>
+        <div class="product-actions">
+          <button class="action-btn">♡</button>
+          <button class="action-btn">👁</button>
+        </div>
+      </div>
+      <div class="product-name">TurboLink C-to-C Cable</div>
+      <div class="product-sub">USB-C to USB-C · 65W PD · 1.5m Braided</div>
+      <div class="product-footer">
+        <div>
+          <span class="product-price">₹399</span>
+          <span class="product-old-price">₹699</span>
+        </div>
+        <button class="add-cart">Add +</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Neckband Sub-header -->
+  <div class="products-header" style="margin-top:4rem;">
+    <div>
+      <div class="section-tag">Neckbands</div>
+      <h2 class="section-title">NECKBANDS</h2>
+    </div>
+  </div>
+  <div class="products-grid">
+
+    <!-- Neckband -->
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="product-badge">Hot</span>
+        <svg style="width:90px;height:90px;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1)" class="product-emoji" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Neckband arc -->
+          <path d="M20 75 Q18 22 60 20 Q102 22 100 75" stroke="#111" stroke-width="8" fill="none" stroke-linecap="round"/>
+          <!-- Left earbud body -->
+          <ellipse cx="19" cy="79" rx="11" ry="15" fill="#1a1a1a" stroke="#333" stroke-width="1.5"/>
+          <ellipse cx="19" cy="79" rx="7" ry="10" fill="#222"/>
+          <circle cx="19" cy="79" r="3.5" fill="#E8000D"/>
+          <circle cx="19" cy="79" r="1.5" fill="#ff4455"/>
+          <!-- Right earbud body -->
+          <ellipse cx="101" cy="79" rx="11" ry="15" fill="#1a1a1a" stroke="#333" stroke-width="1.5"/>
+          <ellipse cx="101" cy="79" rx="7" ry="10" fill="#222"/>
+          <circle cx="101" cy="79" r="3.5" fill="#E8000D"/>
+          <circle cx="101" cy="79" r="1.5" fill="#ff4455"/>
+          <!-- Magnet tips -->
+          <rect x="13" y="92" width="12" height="6" rx="3" fill="#444"/>
+          <rect x="95" y="92" width="12" height="6" rx="3" fill="#444"/>
+          <!-- Magnetic dots -->
+          <circle cx="19" cy="97" r="2.2" fill="#E8000D" opacity="0.8"/>
+          <circle cx="101" cy="97" r="2.2" fill="#E8000D" opacity="0.8"/>
+          <!-- Control button on band -->
+          <circle cx="60" cy="20" r="5" fill="#222" stroke="#444" stroke-width="1"/>
+          <circle cx="60" cy="20" r="2.5" fill="#E8000D"/>
+        </svg>
+        <div class="product-actions">
+          <button class="action-btn">♡</button>
+          <button class="action-btn">👁</button>
+        </div>
+      </div>
+      <div class="product-name">BassX Pro Neckband</div>
+      <div class="product-sub">Magnetic Earbuds · ENC Mic · 24H Battery</div>
+      <div class="product-footer">
+        <div>
+          <span class="product-price">₹599</span>
+          <span class="product-old-price">₹999</span>
+        </div>
+        <button class="add-cart">Add +</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- AirPods Sub-header -->
+  <div class="products-header" style="margin-top:4rem;">
+    <div>
+      <div class="section-tag">AirPods</div>
+      <h2 class="section-title">AIRPODS & TWS</h2>
+    </div>
+  </div>
+  <div class="products-grid">
+
+    <!-- AirPod -->
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <span class="product-badge">New</span>
+        <svg style="width:90px;height:90px;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1)" class="product-emoji" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Left earbud -->
+          <ellipse cx="38" cy="44" rx="14" ry="17" fill="#f0f0f0" stroke="#ccc" stroke-width="1.5"/>
+          <ellipse cx="38" cy="44" rx="9" ry="11" fill="#e0e0e0"/>
+          <circle cx="38" cy="44" r="4" fill="#E8000D" opacity="0.8"/>
+          <!-- Left stem -->
+          <rect x="33" y="58" width="10" height="22" rx="5" fill="#f0f0f0" stroke="#ccc" stroke-width="1.2"/>
+          <!-- Right earbud -->
+          <ellipse cx="82" cy="44" rx="14" ry="17" fill="#f0f0f0" stroke="#ccc" stroke-width="1.5"/>
+          <ellipse cx="82" cy="44" rx="9" ry="11" fill="#e0e0e0"/>
+          <circle cx="82" cy="44" r="4" fill="#E8000D" opacity="0.8"/>
+          <!-- Right stem -->
+          <rect x="77" y="58" width="10" height="22" rx="5" fill="#f0f0f0" stroke="#ccc" stroke-width="1.2"/>
+          <!-- Case bottom hint -->
+          <rect x="22" y="88" width="76" height="18" rx="9" fill="#e8e8e8" stroke="#ccc" stroke-width="1.2"/>
+          <rect x="26" y="92" width="68" height="10" rx="5" fill="#f5f5f5"/>
+          <!-- Case hinge line -->
+          <line x1="22" y1="88" x2="98" y2="88" stroke="#ccc" stroke-width="1"/>
+          <!-- LED dot on case -->
+          <circle cx="60" cy="97" r="2.5" fill="#E8000D" opacity="0.7"/>
+        </svg>
+        <div class="product-actions">
+          <button class="action-btn">♡</button>
+          <button class="action-btn">👁</button>
+        </div>
+      </div>
+      <div class="product-name">ProAir Elite TWS</div>
+      <div class="product-sub">True Wireless · 30H Battery · Touch Control</div>
+      <div class="product-footer">
+        <div>
+          <span class="product-price">₹699</span>
+          <span class="product-old-price">₹1,299</span>
+        </div>
+        <button class="add-cart">Add +</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── ABOUT ─── -->
+<section id="about">
+  <div class="about-visual">📱</div>
+  <div class="about-content">
+    <div class="section-tag">Our Story</div>
+    <h2 class="section-title">WHO IS<br/>BLACKR?</h2>
+    <p>BlackR was born with one mission — to bring premium mobile accessories to everyone, without the premium price tag. We believe your devices deserve the best companions.</p>
+    <p>From fast-charging cables that last years, to earbuds with studio-quality sound — every BlackR product is tested, trusted, and built to perform.</p>
+    <div class="about-features">
+      <div class="about-feat">
+        <strong>Quality First</strong>
+        <span>Every product is rigorously tested before it reaches you.</span>
+      </div>
+      <div class="about-feat">
+        <strong>Best Prices</strong>
+        <span>Premium accessories at prices that make sense.</span>
+      </div>
+      <div class="about-feat">
+        <strong>1-Year Warranty</strong>
+        <span>We stand behind every product we sell.</span>
+      </div>
+      <div class="about-feat">
+        <strong>Fast Delivery</strong>
+        <span>Order today, receive tomorrow — across India.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONTACT ─── -->
+<section id="contact">
+  <div class="section-tag">Get In Touch</div>
+  <h2 class="section-title" style="margin-bottom:3rem;">CONTACT US</h2>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <h3>WE'D LOVE TO HEAR FROM YOU</h3>
+      <p>Have a question about a product? Want to place a bulk order? Or just want to say hello — we're always here for you.</p>
+      <div class="contact-item">
+        <div class="contact-item-icon">📍</div>
+        <div class="contact-item-text">
+          <strong>Location</strong>
+          <span>India</span>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon">📧</div>
+        <div class="contact-item-text">
+          <strong>Email</strong>
+          <span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6e1d1b1e1e011c1a2e0c020f0d051c400700">[email&#160;protected]</a></span>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon">📞</div>
+        <div class="contact-item-text">
+          <strong>Phone</strong>
+          <span>+91 98765 43210</span>
+        </div>
+      </div>
+      <a href="https://wa.me/919876543210" class="whatsapp-btn" target="_blank">
+        💬 Chat on WhatsApp
+      </a>
+    </div>
+    <div>
+      <form class="contact-form" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" placeholder="Enter your name" required/>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="Enter your email" required/>
+        </div>
+        <div class="form-group">
+          <label>I'm Interested In</label>
+          <select>
+            <option>AirPods & TWS</option>
+            <option>Neckbands</option>
+            <option>Cables</option>
+            <option>Adapters</option>
+            <option>Bulk Order</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea rows="4" placeholder="Tell us how we can help..."></textarea>
+        </div>
+        <button type="submit" class="form-submit">Send Message →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#hero" class="logo">BLACK<span>R</span></a>
+      <p>Your go-to destination for premium mobile accessories. Quality you can feel. Prices you'll love.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="#">AirPods</a></li>
+        <li><a href="#">Neckbands</a></li>
+        <li><a href="#">Cables</a></li>
+        <li><a href="#">Adapters</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Track Order</a></li>
+        <li><a href="#">Returns</a></li>
+        <li><a href="#">Warranty</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 BlackR. All rights reserved.</span>
+    <span>Made with ❤️ for <a href="#">BlackR India</a></span>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .cat-card, .product-card').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+  });
+
+  // Nav scroll effect
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // Hero icon cycle
+  const icons = ['🎧', '🔌', '🔋', '🎵', '📱'];
+  const labels = ['Premium Sound', 'Smart Adapters', 'Fast Charging', 'Deep Bass', 'Stay Connected'];
+  let idx = 0;
+  setInterval(() => {
+    idx = (idx + 1) % icons.length;
+    const icon = document.getElementById('heroIcon');
+    if (icon) {
+      icon.style.opacity = '0';
+      icon.style.transform = 'scale(0.7)';
+      setTimeout(() => {
+        icon.textContent = icons[idx];
+        icon.nextElementSibling && (icon.nextElementSibling.textContent = labels[idx]);
+        icon.style.opacity = '1';
+        icon.style.transform = 'scale(1)';
+        icon.style.transition = 'opacity 0.4s, transform 0.4s';
+      }, 300);
+    }
+  }, 2500);
+
+  // Fade-in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.cat-card, .product-card').forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = `opacity 0.5s ease ${i * 0.1}s, transform 0.5s ease ${i * 0.1}s`;
+    observer.observe(el);
+  });
+
+  // Form submit
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.form-submit');
+    btn.textContent =
